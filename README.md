@@ -25,14 +25,6 @@ pip install pillow
 - Image file naming format: `<character>_<number>.png`
 
 ## Usage
-### Run the Program Demo
-```bash
-python main.py
-```
-
-### Output Image
-After running the program, the output image will be saved as `output.png`.
-
 ### Customize Input String
 Modify the following code in `main.py` to change the output string:
 ```python
@@ -45,10 +37,8 @@ image = test_generate_handwriten_image(
 )
 ```
 
-### Generate Randomly Arranged Image
-
-You can use the function generate_randomly_arranged_image(images, canvas_size) to create a new image with randomly placed images from the input list without overlap. The function returns both the merged image and the list of image positions.
-If the return of function has None empty, then this is location fail.
+### Output Image
+![test_generate_handwriten_image output](png/test_generate_handwriten_image_output.png)
 
 ## Configuration
 - `row_spacing_range`: Random spacing range between images in the same row
@@ -59,6 +49,14 @@ If the return of function has None empty, then this is location fail.
 ## Notes
 - The folder structure of the image dataset must be correct; otherwise, the program cannot find the character images.
 - If an unrecognized character is encountered, the program will skip it.
+
+### Generate Randomly Arranged Image
+
+You can use the function generate_randomly_arranged_image(images, canvas_size) to create a new image with randomly placed images from the input list without overlap. The function returns both the merged image and the list of image positions.
+If the return of function has None empty, then this is location fail.
+
+### Output Image
+![generate_randomly_arranged_image_output output](png/generate_randomly_arranged_image_output.png)
 
 ## License
 This program and dataset are provided by the Department of Electronic Engineering, Southern Taiwan University of Science and Technology, for academic research purposes only.
