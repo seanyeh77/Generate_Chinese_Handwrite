@@ -37,7 +37,7 @@ After running the program, the output image will be saved as `output.png`.
 Modify the following code in `main.py` to change the output string:
 ```python
 image = test_generate_handwriten_image(
-    "This handwritten character dataset is provided by the Department of Electronic Engineering, Southern Taiwan University of Science and Technology 123",
+    "本中文手寫字集是由南臺科技大學電子系所提供",
     row_spacing_range=(5, 10),
     col_spacing_range=(1, 3),
     max_columns=10,
