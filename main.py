@@ -51,10 +51,14 @@ def save_image(image, output_path):
     if output_dir and not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    image.save(output_path)
-
-from PIL import Image
-import random
+    ext = os.path.splitext(output_path)[1].lower()
+    if ext == ".jpg" or ext == ".jpeg":
+        image = image.convert("RGB")  # JPEG 不支援 alpha channel
+        image.save(output_path, format="JPEG")
+    elif ext == ".png":
+        image.save(output_path, format="PNG")
+    else:
+        raise ValueError(f"Unsupported file extension: {ext}")
 
 
 def resize_to_height(img, target_height) -> Image.Image:
@@ -148,6 +152,31 @@ def test_generate_handwriten_image(
     Returns:
         image: PIL Image object of the generated handwritten image.
     """
+
+    paths_of_char: dict = get_dict_of_char()
+
+    # check if input is a list of strings
+    images = []
+    for key in input:
+        if key not in paths_of_char:
+            print(f"Warning: '{key}' not found in dataset.")
+            return None
+        else:
+            path = random.choice(paths_of_char[key])
+            image = Image.open(path)
+            image = trim_white_borders(image)
+            images.append(image)
+
+    image = merge_images_horizontally(
+        images, resize, row_spacing_range, col_spacing_range, max_columns
+    )
+    return image
+
+
+def get_dict_of_char() -> dict:
+    if paths_of_char:
+        return paths_of_char
+    #  Traditional-Chinese-Handwriting-Dataset-master
     for folder in os.listdir(
         os.path.join(
             os.path.dirname(__file__),
@@ -181,6 +210,7 @@ def test_generate_handwriten_image(
                     )
                 )
 
+    # MNIST_data
     for folder in os.listdir(
         os.path.join(os.path.dirname(__file__), "data", "MNIST_data")
     ):
@@ -194,21 +224,15 @@ def test_generate_handwriten_image(
                     os.path.dirname(__file__), "data", "MNIST_data", folder, file
                 )
             )
+    return paths_of_char
 
-    images = []
-    for key in input:
-        if key not in paths_of_char:
-            print(f"Warning: '{key}' not found in dataset.")
-        else:
-            path = random.choice(paths_of_char[key])
-            image = Image.open(path)
-            image = trim_white_borders(image)
-            images.append(image)
-
-    image = merge_images_horizontally(
-        images, resize, row_spacing_range, col_spacing_range, max_columns
-    )
-    return image
+def is_valid_text(text: str) -> bool:
+    """Check if the text is valid."""
+    paths_of_char: dict = get_dict_of_char()
+    for char in text:
+        if char not in paths_of_char:
+            return False
+    return True
 
 
 def generate_randomly_arranged_image(images, canvas_size):
@@ -224,6 +248,9 @@ def generate_randomly_arranged_image(images, canvas_size):
     canvas = Image.new("RGBA", canvas_size, (255, 255, 255, 255))
     positions = []
     for img in images:
+        if img is None:
+            positions.append(None)
+            continue
         max_attempts = 1000
         if img.width > canvas_size[0] or img.height > canvas_size[1]:
             positions.append(None)
@@ -259,7 +286,7 @@ def generate_randomly_arranged_image(images, canvas_size):
 
 if __name__ == "__main__":
     image1 = test_generate_handwriten_image(
-        "本中文手寫字集是由南臺科技大學電子系所提供",
+        "這是第一行",
         row_spacing_range=(5, 10),
         col_spacing_range=(1, 3),
         max_columns=10,
