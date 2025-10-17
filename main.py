@@ -2,6 +2,9 @@ import os
 from PIL import Image
 import random
 
+DATASET_PATH = os.path.join(
+    os.path.dirname(__file__), "handwrite_dataset"
+)
 paths_of_char = dict()
 
 
@@ -179,8 +182,7 @@ def get_dict_of_char() -> dict:
     #  Traditional-Chinese-Handwriting-Dataset-master
     for folder in os.listdir(
         os.path.join(
-            os.path.dirname(__file__),
-            "data",
+           DATASET_PATH,
             "Traditional-Chinese-Handwriting-Dataset-master",
             "data",
         )
@@ -188,8 +190,7 @@ def get_dict_of_char() -> dict:
         if not folder.endswith(".zip"):
             for file in os.listdir(
                 os.path.join(
-                    os.path.dirname(__file__),
-                    "data",
+                    DATASET_PATH,
                     "Traditional-Chinese-Handwriting-Dataset-master",
                     "data",
                     folder,
@@ -200,8 +201,7 @@ def get_dict_of_char() -> dict:
                     paths_of_char[file.split("_")[0]] = []
                 paths_of_char[file.split("_")[0]].append(
                     os.path.join(
-                        os.path.dirname(__file__),
-                        "data",
+                        DATASET_PATH,
                         "Traditional-Chinese-Handwriting-Dataset-master",
                         "data",
                         folder,
@@ -212,16 +212,16 @@ def get_dict_of_char() -> dict:
 
     # MNIST_data
     for folder in os.listdir(
-        os.path.join(os.path.dirname(__file__), "data", "MNIST_data")
+        os.path.join(DATASET_PATH, "MNIST_data")
     ):
         for file in os.listdir(
-            os.path.join(os.path.dirname(__file__), "data", "MNIST_data", folder)
+            os.path.join(DATASET_PATH, "MNIST_data", folder)
         ):
             if file.split("_")[0] not in paths_of_char:
                 paths_of_char[file.split("_")[0]] = []
             paths_of_char[file.split("_")[0]].append(
                 os.path.join(
-                    os.path.dirname(__file__), "data", "MNIST_data", folder, file
+                    DATASET_PATH, "MNIST_data", folder, file
                 )
             )
     return paths_of_char
